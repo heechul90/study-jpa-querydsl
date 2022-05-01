@@ -65,5 +65,32 @@ public class QuerydslBasicTest {
         assertThat(findMember.getName()).isEqualTo("member1");
     }
 
+    @Test
+    void searchTest() {
+        Member findMember = queryFactory
+                .selectFrom(member)
+                .where(member.name.eq("member1")
+                        .and(member.age.eq(10)))
+                .fetchOne();
+
+        assertThat(findMember.getName()).isEqualTo("member1");
+        assertThat(findMember.getAge()).isEqualTo(10);
+    }
+
+    @Test
+    void searchAndParamTest() {
+        Member findMember = queryFactory
+                .selectFrom(member)
+                .where(
+                        member.name.eq("member1"),
+                        (member.age.eq(10))
+                )
+                .fetchOne();
+
+        assertThat(findMember.getName()).isEqualTo("member1");
+        assertThat(findMember.getAge()).isEqualTo(10);
+
+    }
+
 
 }
