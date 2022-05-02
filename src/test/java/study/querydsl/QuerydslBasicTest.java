@@ -240,8 +240,38 @@ public class QuerydslBasicTest {
                 .fetch();
 
         assertThat(resultList).extracting("name").containsExactly("teamA", "teamB");
-
-
     }
+
+    @Test
+    void joinOnFiltering() {
+        List<Tuple> resultList = queryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(member.team, team).on(team.name.eq("teamA"))
+                .fetch();
+
+        for (Tuple tuple : resultList) {
+            System.out.println("tuple = " + tuple);
+        }
+    }
+
+    @Test
+    void joinOnNoRelationTest() {
+        em.persist(new Member("teamA"));
+        em.persist(new Member("teamB"));
+        em.persist(new Member("teamC"));
+
+        List<Tuple> fetch = queryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(team).on(member.name.eq(team.name))
+                .fetch();
+
+        for (Tuple tuple : fetch) {
+            System.out.println("tuple = " + tuple);
+        }
+    }
+
+
 
 }
