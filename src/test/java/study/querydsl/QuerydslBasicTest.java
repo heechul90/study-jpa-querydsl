@@ -216,5 +216,32 @@ public class QuerydslBasicTest {
         assertThat(teamB.get(member.age.avg())).isEqualTo(35);
     }
 
+    @Test
+    void joinTest() {
+        List<Member> resultList = queryFactory
+                .selectFrom(member)
+                .join(member.team, team)
+                .where(team.name.eq("teamA"))
+                .fetch();
+
+        assertThat(resultList).extracting("name").containsExactly("member1", "member2");
+    }
+
+    @Test
+    void thetaJoinTest() {
+        em.persist(new Member("teamA"));
+        em.persist(new Member("teamB"));
+        em.persist(new Member("teamC"));
+
+        List<Member> resultList = queryFactory
+                .select(member)
+                .from(member, team)
+                .where(member.name.eq(team.name))
+                .fetch();
+
+        assertThat(resultList).extracting("name").containsExactly("teamA", "teamB");
+
+
+    }
 
 }
