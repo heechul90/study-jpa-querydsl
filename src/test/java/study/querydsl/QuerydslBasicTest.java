@@ -2,7 +2,9 @@ package study.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -402,6 +404,34 @@ public class QuerydslBasicTest {
                 .from(member)
                 .fetch();
 
+        for (String result : resultList) {
+            System.out.println("result = " + result);
+        }
+    }
+
+    @Test
+    void constantTest() {
+        List<Tuple> resultList = queryFactory
+                .select(member.name, Expressions.constant("A"))
+                .from(member)
+                .fetch();
+        for (Tuple result : resultList) {
+            System.out.println("result = " + result);
+        }
+    }
+
+    /**
+     * age 변환시 길이가 1이라서 한글자만 가져오는 이슈가 있음
+     * SELECT H2VERSION(); h2 database에서 확인할 수 있음
+     * 다른 데이터베이스는 모르겟음
+     */
+    @Test
+    void concatTest() {
+        //{name}_{age}
+        List<String> resultList = queryFactory
+                .select(member.name.concat("_").concat(member.age.stringValue()))
+                .from(member)
+                .fetch();
         for (String result : resultList) {
             System.out.println("result = " + result);
         }
