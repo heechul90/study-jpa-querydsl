@@ -59,7 +59,7 @@ class MemberJpaRepositoryTest {
     }
 
     @Test
-    void searchTest() {
+    void searchByBuilder() {
         Team teamA = new Team("teamA");
         Team teamB = new Team("teamB");
         em.persist(teamA);
@@ -81,5 +81,58 @@ class MemberJpaRepositoryTest {
 
         List<MemberTeamDto> resultList = memberJpaRepository.searchByBuilder(condition);
         assertThat(resultList).extracting("username").containsExactly("member4");
+    }
+
+    @Test
+    void searchByWhereParam() {
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        em.persist(teamA);
+        em.persist(teamB);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 20, teamA);
+        Member member3 = new Member("member3", 30, teamB);
+        Member member4 = new Member("member4", 40, teamB);
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        em.persist(member4);
+
+        MemberSearchCondition condition = new MemberSearchCondition();
+        condition.setAgeGoe(35);
+        condition.setAgeLoe(40);
+        condition.setTeamName("teamB");
+
+        List<MemberTeamDto> resultList = memberJpaRepository.searchByWhereParam(condition);
+        assertThat(resultList).extracting("username").containsExactly("member4");
+    }
+
+    @Test
+    void searchMemberByWhereParam() {
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        em.persist(teamA);
+        em.persist(teamB);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 20, teamA);
+        Member member3 = new Member("member3", 30, teamB);
+        Member member4 = new Member("member4", 40, teamB);
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        em.persist(member4);
+
+        MemberSearchCondition condition = new MemberSearchCondition();
+        condition.setAgeGoe(35);
+        condition.setAgeLoe(40);
+        condition.setTeamName("teamB");
+
+        List<Member> resultList = memberJpaRepository.searchMemberByWhereParam(condition);
+        for (Member member : resultList) {
+            System.out.println("member = " + member);
+        }
+        assertThat(resultList).extracting("name").containsExactly("member4");
     }
 }
