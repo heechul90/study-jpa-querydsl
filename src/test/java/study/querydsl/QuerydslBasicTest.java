@@ -761,9 +761,4 @@ public class QuerydslBasicTest {
         }
     }
 
-
-
-
-
-
 }
