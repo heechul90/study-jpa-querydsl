@@ -653,4 +653,87 @@ public class QuerydslBasicTest {
         return member.name.eq(nameCondition).and(member.age.eq(ageCondition));
     }
 
+    @Test
+    void bulkUpdate() {
+
+        //member1 = 10 -> DB 비회원
+        //member2 = 20 -> DB 비회원
+        //member3 = 30 -> DB member3
+        //member4 = 40 -> DB member4
+
+        long count = queryFactory
+                .update(member)
+                .set(member.name,"비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        //영속성 컨텍스트가 우선권을 가지게 되서 디비정보를 출력하지 않는다.
+        //1 member1 = 10 -> 1 DB 비회원
+        //2 member2 = 20 -> 2 DB 비회원
+        //3 member3 = 30 -> 3 DB member3
+        //4 member4 = 40 -> 4 DB member4
+
+        List<Member> resultList = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for (Member result : resultList) {
+            System.out.println("result = " + result);
+        }
+
+        em.flush();
+        em.clear();
+
+        List<Member> resultList1 = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for (Member result : resultList1) {
+            System.out.println("result1 = " + result);
+        }
+    }
+
+    @Test
+    void bulkAdd() {
+        long count = queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1))
+                .execute();
+
+        em.flush();
+        em.clear();
+
+        List<Member> resultList = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for (Member result : resultList) {
+            System.out.println("result = " + result);
+        }
+    }
+
+    @Test
+    void bulkDelete() {
+        long count = queryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
+
+        em.flush();
+        em.clear();
+
+        List<Member> resultList = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for (Member result : resultList) {
+            System.out.println("result = " + result);
+        }
+    }
+
+
+
+
+
+
 }
