@@ -22,18 +22,18 @@ import static org.springframework.util.StringUtils.hasText;
 import static study.querydsl.entity.QMember.member;
 import static study.querydsl.entity.QTeam.team;
 
-public class MemberRepositoryImpl extends QuerydslRepositorySupport implements MemberRepositoryCustom {
+public class MemberRepositoryImpl /*extends QuerydslRepositorySupport*/ implements MemberRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    /*public MemberRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }*/
-
     public MemberRepositoryImpl(EntityManager em) {
-        super(Member.class);
         this.queryFactory = new JPAQueryFactory(em);
     }
+
+    /*public MemberRepositoryImpl(EntityManager em) {
+        super(Member.class);
+        this.queryFactory = new JPAQueryFactory(em);
+    }*/
 
     @Override
     public List<MemberTeamDto> search(MemberSearchCondition condition) {
@@ -81,7 +81,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
         return new PageImpl<>(content, pageable, total);
     }
 
-    public Page<MemberTeamDto> searchPageSimple2(MemberSearchCondition condition, Pageable pageable) {
+    /*public Page<MemberTeamDto> searchPageSimple2(MemberSearchCondition condition, Pageable pageable) {
 
         JPQLQuery<MemberTeamDto> jpaQuery = from(member)
                 .leftJoin(member.team, team)
@@ -106,7 +106,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
         List<MemberTeamDto> content = results.getResults();
         long total = results.getTotal();
         return new PageImpl<>(content, pageable, total);
-    }
+    }*/
 
     @Override
     public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
