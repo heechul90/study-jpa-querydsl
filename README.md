@@ -1,4 +1,4 @@
-#study-jpa-querydsl 저장소입니다.
+# study-jpa-querydsl 저장소입니다.
 
 ## 인프런 강의명 : [실전! Querydsl](https://www.inflearn.com/course/Querydsl-%EC%8B%A4%EC%A0%84)
 
